@@ -28,6 +28,7 @@ For physical devices, change `API_BASE_URL` to your machine's LAN IP (e.g. `http
 - `useFeedbackMutation` posts likes/dislikes with a persisted `user_identifier` from `AsyncStorage`.
 - `useLikedPeople` drives the Matches screen from `/api/people/liked`.
 - `useFeedbackSummary` fetches `/api/people/summary` so the dashboard counters stay in sync with the server (likes, passes, remaining profiles).
+- We replaced Recoil with Zustand because Recoil does not yet officially support React 19; Zustand keeps state management lightweight and compatible.
 
 ### Backend Deployment (Vercel)
 1. `cd backend`
