@@ -12,12 +12,12 @@
             "dest": "/public/openapi.yaml"
         },
         {
-            "src": "/api/(.*)",
-            "dest": "/public/index.php"
+            "src": "/build/(.*)",
+            "dest": "/public/build/$1"
         },
         {
             "src": "/(.*)",
-            "dest": "/public/index.php"
+            "dest": "/api/index.php"
         }
     ],
     "public": true,
