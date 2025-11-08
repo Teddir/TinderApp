@@ -6,10 +6,7 @@ const FALLBACK_BASE_URL = Platform.select({
   default: 'http://127.0.0.1:8000',
 });
 
-const ENV_BASE_URL =
-  typeof process !== 'undefined' && process.env?.API_BASE_URL
-    ? process.env.API_BASE_URL
-    : undefined;
+const ENV_BASE_URL = "https://tinder-app-api.vercel.app/api"
 
 export const API_BASE_URL = ENV_BASE_URL ?? FALLBACK_BASE_URL ?? '';
 
