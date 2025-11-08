@@ -13,15 +13,11 @@
         },
         {
             "src": "/api/(.*)",
-            "dest": "/api/index.php"
-        },
-        {
-            "src": "/build/(.*)",
-            "dest": "/public/build/$1"
+            "dest": "/public/index.php"
         },
         {
             "src": "/(.*)",
-            "dest": "/api/index.php"
+            "dest": "/public/index.php"
         }
     ],
     "public": true,
