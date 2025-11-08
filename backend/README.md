@@ -46,6 +46,7 @@ Configure mail transport (`MAIL_MAILER`, `MAIL_HOST`, etc.) so the cron job can 
 
 - Swagger UI: `GET /docs`
 - Raw OpenAPI: `GET /openapi.yaml`
+- Production base URL: `https://tinder-app-api.vercel.app/api`
 
 All endpoints support JSON and live under the `/api` prefix.
 
@@ -57,6 +58,23 @@ All endpoints support JSON and live under the `/api` prefix.
 | `GET` | `/api/people/liked` | Returns people with ≥ 1 like ordered by popularity |
 
 `user_identifier` in request payloads should be a stable identifier for the acting user (e.g. device id).
+
+## Deploying to Vercel
+
+1. Install the Vercel CLI and log in: `npm i -g vercel && vercel login`.
+2. From `backend/`, ensure `vercel.json` contains the PHP runtime and the rewrites for `/openapi.yaml` and `/api/(.*)` to `/public/index.php`.
+3. Set environment variables (Preview + Production) in the Vercel dashboard or via CLI:
+   - `APP_URL` (e.g. `https://tinder-app-api.vercel.app`)
+   - `APP_KEY` (`php artisan key:generate --show`)
+   - `APP_ENV`, `APP_DEBUG`, `LOG_CHANNEL`, etc.
+   - Database credentials (`DB_HOST`, `DB_PORT`, `DB_DATABASE`, `DB_USERNAME`, `DB_PASSWORD`)
+4. Deploy: `vercel --prod`.
+5. (Optional) Seed or migrate remotely if needed using the production database credentials.
+
+After deploy:
+- API base: `https://tinder-app-api.vercel.app/api`
+- Swagger UI: `https://tinder-app-api.vercel.app/docs`
+- OpenAPI spec: `https://tinder-app-api.vercel.app/openapi.yaml`
 
 ## Cron & Queues
 

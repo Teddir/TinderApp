@@ -19,14 +19,30 @@ If you add native dependencies (e.g. async-storage) run `cd ios && pod install`.
 The app calls the Laravel API via the base URL defined in `src/config/api.ts`. Defaults:
 - iOS simulator: `http://127.0.0.1:8000`
 - Android emulator: `http://10.0.2.2:8000`
+- Production: `https://tinder-app-api.vercel.app/api`
 
-For physical devices, change `API_BASE_URL` to your machine's LAN IP (e.g. `http://192.168.0.42:8000`). You can also inject `API_BASE_URL` at build time if you wrap the Metro bundler with environment variables.
+For physical devices, change `API_BASE_URL` to your machine's LAN IP (e.g. `http://192.168.0.42:8000`). You can also inject `API_BASE_URL` at build time if you wrap the Metro bundler with environment variables or use the production endpoint above.
 
 ### Data Flow
 - `usePeople` loads paginated recommendations from `/api/people` and hydrates the swipe deck store.
 - `useFeedbackMutation` posts likes/dislikes with a persisted `user_identifier` from `AsyncStorage`.
 - `useLikedPeople` drives the Matches screen from `/api/people/liked`.
 - `useFeedbackSummary` fetches `/api/people/summary` so the dashboard counters stay in sync with the server (likes, passes, remaining profiles).
+
+### Backend Deployment (Vercel)
+1. `cd backend`
+2. Ensure `vercel.json` is committed (contains PHP runtime, rewrites, and `/openapi.yaml` passthrough).
+3. Create environment variables in Vercel (Production & Preview):
+   - `APP_URL` = `https://tinder-app-api.vercel.app`
+   - `APP_KEY` = Laravel app key (`php artisan key:generate --show`)
+   - Database credentials (`DB_HOST`, `DB_PORT`, `DB_DATABASE`, `DB_USERNAME`, `DB_PASSWORD`)
+4. Deploy: `vercel --prod` (or push to the connected repo).
+5. After the first deploy, run seeds once if necessary: `vercel env pull` + remote CLI, or trigger via local artisan hitting the production DB.
+
+Deployed endpoints:
+- Swagger UI: `https://tinder-app-api.vercel.app/docs`
+- OpenAPI spec: `https://tinder-app-api.vercel.app/openapi.yaml`
+- API base URL: `https://tinder-app-api.vercel.app/api`
 
 ### Testing & Linting
 ```sh
