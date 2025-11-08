@@ -1,0 +1,153 @@
+openapi: 3.0.3
+info:
+  title: TinderClone Backend API
+  version: 1.0.0
+  description: >
+    REST API for managing people recommendations, likes, and notifications.
+servers:
+  - url: http://localhost:8000
+paths:
+  /api/people:
+    get:
+      summary: List recommended people
+      description: Returns a paginated list of people with their likes/dislikes counts.
+      parameters:
+        - in: query
+          name: page
+          schema:
+            type: integer
+            minimum: 1
+          description: Page number, defaults to 1.
+        - in: query
+          name: per_page
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 50
+          description: Number of records per page, defaults to 10, maximum 50.
+      responses:
+        '200':
+          description: Paginated list of people.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedPeople'
+  /api/people/liked:
+    get:
+      summary: List liked people
+      description: Returns people that have been liked at least once, sorted by like count.
+      parameters:
+        - in: query
+          name: page
+          schema:
+            type: integer
+            minimum: 1
+        - in: query
+          name: per_page
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 50
+      responses:
+        '200':
+          description: Paginated liked people.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedPeople'
+  /api/people/{person}/like:
+    post:
+      summary: Like a person
+      parameters:
+        - $ref: '#/components/parameters/PersonId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FeedbackPayload'
+      responses:
+        '200':
+          description: Person liked successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Person'
+  /api/people/{person}/dislike:
+    post:
+      summary: Dislike a person
+      parameters:
+        - $ref: '#/components/parameters/PersonId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FeedbackPayload'
+      responses:
+        '200':
+          description: Person disliked successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Person'
+components:
+  parameters:
+    PersonId:
+      name: person
+      in: path
+      required: true
+      schema:
+        type: integer
+        minimum: 1
+      description: Identifier of the person.
+  schemas:
+    Person:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        age:
+          type: integer
+        location:
+          type: string
+        pictures:
+          type: array
+          items:
+            type: string
+            format: uri
+        likes_count:
+          type: integer
+          minimum: 0
+        dislikes_count:
+          type: integer
+          minimum: 0
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+    FeedbackPayload:
+      type: object
+      required:
+        - user_identifier
+      properties:
+        user_identifier:
+          type: string
+          example: user-123
+          description: Deterministic identifier for the acting user/device.
+    PaginatedPeople:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Person'
+        links:
+          type: object
+        meta:
+          type: object
+

@@ -1,0 +1,7 @@
+backend/**
+android/**
+ios/**
+node_modules/**
+vendor/**
+**/*.min.js
+
